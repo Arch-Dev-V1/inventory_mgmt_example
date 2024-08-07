@@ -27,17 +27,6 @@ pipeline {
                 sh 'npm test'
             }
         }
-        stage('SonarQube Analysis') {
-            steps {
-                    withSonarQubeEnv('SonarQube Server') {
-                    sh "${SONARQUBE_SCANNER_HOME}/bin/sonar-scanner \
-                        -Dsonar.projectKey=your-project-key \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=http://your-sonarqube-server \
-                        -Dsonar.login=$SONAR_TOKEN"
-            }
-        }
-    }
 
     post {
         always {
