@@ -19,12 +19,16 @@ pipeline {
         }
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                dir('inventory_mgmt_example/server') {
+                    sh 'npm install'
+                }
             }
         }
         stage('Run Tests') {
             steps {
-                sh 'npm test'
+                dir('inventory_mgmt_example/server') {
+                    sh 'npm test'
+                }
             }
         }
 
