@@ -35,7 +35,7 @@ pipeline {
 
     post {
         always {
-             node {
+             node("Record Tests") {
                 // Ensure the 'junit' step runs in a proper context with a valid FilePath
                 junit 'reports/**/*.xml'
                 archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
