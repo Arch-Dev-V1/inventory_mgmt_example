@@ -24,7 +24,7 @@ pipeline {
                 }
             }
         }
-        stage('Run Tests') {
+        stage('Log Tests') {
             steps {
                 dir('inventory_mgmt_example/server') {
                     sh 'npm test'
