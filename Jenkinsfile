@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+  	    nodejs 'Node-Tool'
+	}
+    
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch to build')
     }
@@ -9,10 +13,8 @@ pipeline {
         stage('Display Environment Variables') {
             steps {
                 // Display all environment variables
-                sh 'printenv'
-
-                // Specifically display the NODEJS_HOME variable
-                sh 'echo $env.NODEJS_HOME'
+                sh 'node --version'
+                sh 'npm --version'
             }
         }
         stage('Checkout') {
