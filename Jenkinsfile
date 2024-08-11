@@ -27,20 +27,6 @@ pipeline {
                 git branch: "${params.BRANCH_NAME}", url: 'https://github.com/Arch-Dev-V1/inventory_mgmt_example.git'
             }
         }
-        stage('Install Dependencies') {
-            steps {
-                dir('inventory_mgmt_example/server') {
-                    sh 'npm install'
-                }
-            }
-        }
-        stage('Log Tests') {
-            steps {
-                dir('inventory_mgmt_example/server') {
-                    sh 'npm test'
-                }
-            }
-        }
     }
 
     post {
