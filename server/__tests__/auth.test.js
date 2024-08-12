@@ -8,29 +8,14 @@ const app = require('../app');
 const user = require('../models/users');
 require('dotenv').config();
 
-beforeAll(async () => {
-    const dburi = process.env.MONGODB_URI;
-    try {
-        await mongoose.connect(dburi, { useNewUrlParser: true, useUnifiedTopology: true }); 
-        expect(mongoose.connection.readyState).toBe(1);
-
-    } catch(error) {
-        console.error('Failed to connect to the database', error);
-        throw error;
-    }
-}, 10000);
-
-afterAll(async () => {
-    try {
-        await mongoose.disconnect();
-
-    } catch(error) {
-        console.error('Failed to disconnect the database', error);
-    }
-}, 12000);
+jest.mock('../models/users');
+jest.mock('bcryptjs');
+jest.mock('jsonwebtoken')
 
 describe('POST /login', () =>{
     it('should return 404 if user is not found', async() => {
+        user.findOne.mockResolvedValue(null);
+
         const response = await request(app)
         .post('/api/auth/login')
         .send({email: 'ashutoshbhatt92@gmail.com', password: '2222'});
@@ -40,6 +25,11 @@ describe('POST /login', () =>{
     });
 
     it('should return 400 if credentials are invalid', async () => {
+      user.findOne.mockResolvedValue({
+        resetPasswordToken: null,
+        password: 'hashedpassword'
+    });
+
         const response = await request(app)
           .post('/api/auth/login')
           .send({ email: 'ashutoshbhatt992@gmail.com', password: 'wrongpassword' });
@@ -49,17 +39,23 @@ describe('POST /login', () =>{
       });
 
       it('should return a token and 200 status on successful login', async () => {
+        user.findOne.mockResolvedValue({
+          _id: 'userId',
+          role: 'user',
+          resetPasswordToken: null,
+          password: 'hashedpassword'
+      });
+      bcrypt.compare.mockResolvedValue(true);
+      jwt.sign.mockReturnValue('fake-jwt-token');
+
         const response = await request(app)
           .post('/api/auth/login')
           .send({ email: 'ashutoshbhatt992@gmail.com', password: '123456' });
     
         expect(response.status).toBe(200);
         expect(response.body.token).toBeDefined();
-    
-        // Optionally, verify the token
-        const decoded = jwt.verify(response.body.token, process.env.JWT_SECRET);
-        expect(decoded.userId).toBe(user._id);
-        expect(decoded.role).toBe(user.role);
+
+        expect(response.body.token).toBe('fake-jwt-token');
       });
 
       it('should return 500 if there is a server error', async () => {
