@@ -15,6 +15,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', categoryRoutes);
