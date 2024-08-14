@@ -15,17 +15,17 @@ jest.mock('bcryptjs');
 jest.mock('jsonwebtoken')
 
 // Middleware
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+appTest.use(express.json());
+appTest.use(bodyParser.json());
+appTest.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/api/auth', authRoutes);
+appTest.use('/api/auth', authRoutes);
 
 describe('POST /login', () =>{
     it('should return 404 if user is not found', async() => {
         user.findOne.mockResolvedValue(null);
 
-        const response = await request(app)
+        const response = await request(appTest)
         .post('/api/auth/login')
         .send({email: 'ashutoshbhatt92@gmail.com', password: '2222'});
 
@@ -39,7 +39,7 @@ describe('POST /login', () =>{
         password: 'hashedpassword'
     });
 
-        const response = await request(app)
+        const response = await request(appTest)
           .post('/api/auth/login')
           .send({ email: 'ashutoshbhatt992@gmail.com', password: 'wrongpassword' });
     
@@ -57,7 +57,7 @@ describe('POST /login', () =>{
       bcrypt.compare.mockResolvedValue(true);
       jwt.sign.mockReturnValue('fake-jwt-token');
 
-        const response = await request(app)
+        const response = await request(appTest)
           .post('/api/auth/login')
           .send({ email: 'ashutoshbhatt992@gmail.com', password: '123456' });
     
@@ -72,7 +72,7 @@ describe('POST /login', () =>{
         const originalFunction = user.findOne;
         user.findOne = jest.fn().mockRejectedValue(new Error('Server error'));
     
-        const response = await request(app)
+        const response = await request(appTest)
           .post('/api/auth/login')
           .send({ email: 'test@example.com', password: 'password123' });
     
