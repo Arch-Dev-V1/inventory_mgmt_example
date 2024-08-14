@@ -1,16 +1,25 @@
 const request = require('supertest');
-const express = require('express');
-const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const express = require('express');
+const bodyParser = require('body-parser');
 
-const app = require('../app');
+const app = express();
 const user = require('../models/users');
+const authRoutes = require('../routes/auth');
+
 require('dotenv').config();
 
 jest.mock('../models/users');
 jest.mock('bcryptjs');
 jest.mock('jsonwebtoken')
+
+// Middleware
+app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use('/api/auth', authRoutes);
 
 describe('POST /login', () =>{
     it('should return 404 if user is not found', async() => {
