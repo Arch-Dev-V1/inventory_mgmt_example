@@ -19,21 +19,18 @@ pipeline {
         }
         stage('Checkout') {
             steps {
-                git branch: "${params.BRANCH_NAME}", url: 'https://github.com/Arch-Dev-V1/inventory_mgmt_example.git'
+                //git branch: "${params.BRANCH_NAME}", url: 'https://github.com/Arch-Dev-V1/inventory_mgmt_example.git'
+		checkout scm
             }
         }
 	stage('Install Dependencies') {
             steps {
-                dir('inventory_mgmt_example/server') {
-                    sh 'npm install'
-                }
+                 sh 'npm install'
             }
         }
 	stage('Run Tests') {
             steps {
-                dir('inventory_mgmt_example/server') {
-                    sh 'npm test'
-                }
+                sh 'npm test'
             }
         }
     }
