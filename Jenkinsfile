@@ -47,9 +47,11 @@ pipeline {
         }
         success {
             echo 'Build succeeded!'
+	    githubCheck status: 'COMPLETED', name: 'Tests', detailsURL: "${env.BUILD_URL}", summary: 'All tests passed', conclusion: 'SUCCESS'
         }
         failure {
             echo 'Build failed!'
+	    githubCheck status: 'COMPLETED', name: 'Tests', detailsURL: "${env.BUILD_URL}", summary: 'Tests failed', conclusion: 'FAILURE'
         }
     }
 }
