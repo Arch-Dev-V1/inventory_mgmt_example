@@ -1,5 +1,5 @@
 const User = require('../models/users');
-const transporter = require('../config/nodemailer');
+//const transporter = require('../config/nodemailer');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
@@ -97,7 +97,7 @@ exports.createUser = async(req, res) => {
             });
 
             await admin.save();
-            mail(admin, res);
+           // mail(admin, res);
         } else if (existingUser.resetPasswordToken) {
             verifyEmail(existingUser);
         }
